@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_flutter/common/status_bar.dart';
+import 'package:shopping_flutter/common/product_grid.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: CustomeStatusBar(),
-        body: Center(child: Text("dd")),
+        body: ProductGrid()
       ),
     );
   }

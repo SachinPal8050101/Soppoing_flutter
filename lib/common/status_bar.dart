@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shopping_flutter/screens/cart_scree.dart';
 
 class CustomeStatusBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomeStatusBar({super.key});
@@ -54,6 +55,10 @@ class CustomeStatusBar extends StatelessWidget implements PreferredSizeWidget {
                     icon: const Icon(Icons.card_travel),
                     color: Colors.black,
                     onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const CartScreen()),
+                      );
                       if (kDebugMode) {
                         print('Notification button pressed');
                       }
@@ -82,7 +87,9 @@ class CustomeStatusBar extends StatelessWidget implements PreferredSizeWidget {
                   borderRadius: BorderRadius.circular(
                       35.0), // Increase this value to increase the border radius
                 ),
-                focusedBorder:   const OutlineInputBorder(borderSide: BorderSide(width: 1, color: Colors.black),borderRadius: BorderRadius.all(Radius.circular(30))),
+                focusedBorder: const OutlineInputBorder(
+                    borderSide: BorderSide(width: 1, color: Colors.black),
+                    borderRadius: BorderRadius.all(Radius.circular(30))),
               ),
             ),
           ), // replace 'sdsd' with your text
