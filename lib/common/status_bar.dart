@@ -20,9 +20,9 @@ class CustomeStatusBar extends StatelessWidget implements PreferredSizeWidget {
               Container(
                 margin: const EdgeInsets.only(left: 10),
                 child: Image.network(
-                  'https://static-00.iconduck.com/assets.00/myntra-icon-2048x1386-nda4rc65.png',
-                  width: 35,
-                  height: 35,
+                  'https://1000logos.net/wp-content/uploads/2022/08/Myntra-Logo.png',
+                  width: 65,
+                  height: 65,
                 ),
               ),
               Row(

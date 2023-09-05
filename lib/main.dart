@@ -11,11 +11,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: CustomeStatusBar(),
-        body: ProductGridState()
+        appBar: const CustomeStatusBar(),
+        body: const ProductGridState(),
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor:  Colors.white,
+          items: [
+            BottomNavigationBarItem(
+              icon: Image.network(
+                  'https://gumlet.assettype.com/afaqs%2F2021-01%2F15f5f827-8e29-4520-af8d-a0f353b8da17%2Fimages.png?auto=format%2Ccompress&w=1200', height: 23, width: 23,),
+              label: 'Home',
+            ),
+            const BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: 'Profile',
+            )
+          ],
+        ),
       ),
     );
   }
