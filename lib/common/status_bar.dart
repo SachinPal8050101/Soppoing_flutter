@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shopping_flutter/screens/cart_scree.dart';
+import 'package:shopping_flutter/screens/cart_screen.dart';
 
 class CustomeStatusBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomeStatusBar({super.key});
