@@ -15,7 +15,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: CustomeStatusBar(),
-        body: ProductGrid()
+        body: ProductGridState()
       ),
     );
   }

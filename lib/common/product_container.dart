@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 class ProductContainer extends StatelessWidget {
-  const ProductContainer({Key? key}) : super(key: key);
+    final product;
+
+     const ProductContainer({super.key, required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +26,7 @@ class ProductContainer extends StatelessWidget {
                 AspectRatio(
                   aspectRatio: 1, // Adjust this value as needed
                   child: Image.network(
-                    'https://assets.ajio.com/medias/sys_master/root/20210917/LYJI/6143f17caeb269a26895e22a/-473Wx593H-462967288-blue-MODEL.jpg',
+                    product?.banner,
                     width: deviceWidth / 2,
                     fit: BoxFit.fill,
                   ),
@@ -37,11 +39,11 @@ class ProductContainer extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Flexible(
+                           Flexible(
                             child: Text(
-                              'Mast & Harbour',
+                             product?.name ?? '',
                                overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
+                              style: const TextStyle(
                                   fontSize: 15, fontWeight: FontWeight.w900),
                             ),
                           ),
@@ -58,10 +60,10 @@ class ProductContainer extends StatelessWidget {
                           ),
                         ],
                       ),
-                         const Text(
-                          'Pure Cotton Denim Jacket',
+                          Text(
+                          product?.description ?? '',
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 11, color: Colors.grey),
+                          style: const TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                       
                       Row(
@@ -76,8 +78,8 @@ class ProductContainer extends StatelessWidget {
                           ),
                           Container(
                               margin: const EdgeInsets.only(left: 8, right: 8),
-                              child: const Text("₹1,119",
-                                  style: TextStyle(
+                              child: Text(product?.price.toString() ?? '',
+                                  style: const TextStyle(
                                       fontSize: 11,
                                       fontWeight: FontWeight.bold))),
                           Container(
@@ -105,9 +107,9 @@ class ProductContainer extends StatelessWidget {
                         children: [
                           Container(
                               margin: const EdgeInsets.only(right: 2),
-                              child: const Text(
-                                'Best Price ₹832',
-                                style: TextStyle(
+                              child: Text(
+                                product?.price.toString() ?? '',
+                                style: const TextStyle(
                                     fontSize: 12,
                                     color: Colors.green,
                                     fontWeight: FontWeight.bold),
