@@ -32,7 +32,7 @@ class _ProductGrid extends  State<ProductGridState> {
 
 
 Future<List<Product>> fetchData() async {
-    final response = await http.get(Uri.parse('http://192.168.3.212:5002/product'));
+    final response = await http.get(Uri.parse('http://192.168.3.212:5000/product/'));
 
     if (response.statusCode == 200) {
       final List<Product> products = parseProducts(response.body);

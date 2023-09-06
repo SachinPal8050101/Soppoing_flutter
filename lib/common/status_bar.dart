@@ -58,7 +58,7 @@ class CustomeStatusBar extends StatelessWidget implements PreferredSizeWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(builder: (context) => const CartScreen()),
-                      );
+                      ).then((value) => FocusScope.of(context).requestFocus(FocusNode()));
                       if (kDebugMode) {
                         print('Notification button pressed');
                       }

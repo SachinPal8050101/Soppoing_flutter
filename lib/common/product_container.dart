@@ -17,7 +17,7 @@ class ProductContainer extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const ProductDetailes()),
-        ),
+        ).then((value) => FocusScope.of(context).requestFocus(FocusNode())),
       },
       child: Container(
         decoration: BoxDecoration(
