@@ -1,8 +1,209 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shopping_flutter/dataSchemas/product_response.dart';
 
-class ProductDetailes extends StatelessWidget {
-  const ProductDetailes({super.key});
+class ProductDetailes extends StatefulWidget {
+  final String productId;
+  const ProductDetailes({super.key, required this.productId});
+  @override
+  State<ProductDetailes> createState() => _ProductDetailesState();
+}
+
+class _ProductDetailesState extends State<ProductDetailes> {
+  int cardItemsNumber = 0;
+  int wishListItemNumber = 0;
+  void incrementCardItemsNumber() {
+    setState(() {
+      cardItemsNumber++;
+    });
+  }
+
+  void incrementInWishList() {
+    setState(() {
+      wishListItemNumber++;
+    });
+  }
+
+  List<Product> parseProducts(String responseBody) {
+    final Map<String, dynamic> data = json.decode(responseBody);
+
+    if (data != null) {
+      final List<dynamic> dataList = data['data'];
+      return dataList.map<Product>((json) => Product.fromJson(json)).toList();
+    } else {
+      throw Exception('Invalid response format');
+    }
+  }
+
+  Future<List<Product>> getProductDetailes() async {
+    var queryParameters = {
+      'productId': widget.productId,
+    };
+
+    final response = await http.get(Uri.http(
+        '192.168.3.212:5002', '/product/productById', queryParameters));
+    if (response.statusCode == 200) {
+      final List<Product> products = parseProducts(response.body);
+      return products;
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Widget productImageCarosal(banner) => CarouselSlider(
+        items: [
+          Image.network(
+            banner,
+            width: 600,
+            height: 540,
+            fit: BoxFit.cover,
+          ),
+          Image.network(
+            banner,
+            width: 600,
+            height: 540,
+            fit: BoxFit.cover,
+          ),
+        ],
+        options: CarouselOptions(
+          height: 500.0,
+          enlargeCenterPage: true,
+          autoPlay: true,
+          aspectRatio: 16 / 9,
+          autoPlayCurve: Curves.fastOutSlowIn,
+          enableInfiniteScroll: true,
+          autoPlayAnimationDuration: const Duration(milliseconds: 800),
+          viewportFraction: 0.8,
+        ),
+      );
+
+  Widget productTitle(price, title) => Container(
+      margin: const EdgeInsets.all(15),
+      child: Column(
+        children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            SizedBox(
+              width: 250,
+              child: Text(
+                title ?? '',
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            const Text(
+              "Explore brand",
+              style: TextStyle(
+                  fontWeight: FontWeight.bold, fontSize: 13, color: Colors.red),
+            )
+          ]),
+          Container(
+            margin: const EdgeInsets.only(top: 7),
+            child: Row(
+              children: [
+                const Text(
+                  "MRP",
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 5, right: 5),
+                  child: const Text(
+                    "₹2,799",
+                    style: TextStyle(
+                      decoration: TextDecoration.lineThrough,
+                    ),
+                  ),
+                ),
+                Text(
+                  price.toString(),
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 8, right: 8),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Color(0x40FF0000), // Red color with less opacity
+                        Color(0x80FF0000), // Red color with full opacity
+                      ],
+                    ),
+                  ),
+                  padding: const EdgeInsets.only(
+                      left: 10, right: 10, top: 2, bottom: 2),
+                  child: const Text("60% OFF!",
+                      style: TextStyle(fontSize: 11, color: Colors.red)),
+                )
+              ],
+            ),
+          )
+        ],
+      ));
+
+  var darkWhiteSpace = (deviceWidth) => Container(
+        width: deviceWidth, // Specify the width
+        height: 30.0, // Specify the height
+        color: Colors.grey[200], // Dark white color
+      );
+
+  var buttonConatiner = (deviceWidth, incrementCardItemsNumber,
+          incrementInWishList) =>
+      Container(
+        margin: const EdgeInsets.only(top: 25, left: 10, right: 10),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          InkWell(
+            onTap: () => {incrementInWishList()},
+            child: Container(
+              decoration: BoxDecoration(
+                  border: Border.all(width: 1, color: Colors.grey)),
+              padding: const EdgeInsets.only(
+                  left: 35, right: 35, bottom: 10, top: 10),
+              // margin: const EdgeInsets.only(left: 25, right: 5),
+              child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      child: const Icon(
+                        Icons.favorite_border,
+                      ),
+                    ),
+                    const Text("WISHLIST"),
+                  ]),
+            ),
+          ),
+          InkWell(
+            onTap: () => {incrementCardItemsNumber()},
+            child: Container(
+              padding: const EdgeInsets.only(
+                  left: 35, right: 35, bottom: 10, top: 10),
+              // margin: const EdgeInsets.only(left: 25, right: 5),
+              decoration: BoxDecoration(
+                  border: Border.all(
+                    width: 1,
+                    color: Colors.grey,
+                  ),
+                  color: const Color.fromARGB(255, 253, 66, 66)),
+              child: Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                        margin: const EdgeInsets.only(left: 10, right: 10),
+                        child: const Icon(
+                          Icons.card_travel,
+                          color: Colors.white,
+                        )),
+                    const Text(
+                      "ADD TO BAG",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ]),
+            ),
+          )
+        ]),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -23,169 +224,99 @@ class ProductDetailes extends StatelessWidget {
                 // Handle the onPressed event here
               },
             ),
-            IconButton(
-              icon: const Icon(Icons.favorite_border, color: Colors.black),
-              onPressed: () {
-                // Handle the onPressed event here
-              },
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.favorite_border, color: Colors.black),
+                  onPressed: () {
+                    // Handle the onPressed event here
+                  },
+                ),
+                wishListItemNumber > 0
+                    ? Positioned(
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(1),
+                          margin: const EdgeInsets.only(right: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 15,
+                            minHeight: 15,
+                          ),
+                          child: Text(
+                            '$wishListItemNumber',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    : Container(),
+              ],
             ),
-            IconButton(
-              icon: const Icon(Icons.card_travel, color: Colors.black),
-              onPressed: () {
-                // Handle the onPressed event here
-              },
+            Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.card_travel, color: Colors.black),
+                  onPressed: () {
+                    // Handle the onPressed event here
+                  },
+                ),
+                cardItemsNumber > 0
+                    ? Positioned(
+                        right: 0,
+                        child: Container(
+                          padding: const EdgeInsets.all(1),
+                          margin: const EdgeInsets.only(right: 6),
+                          decoration: BoxDecoration(
+                            color: Colors.red,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          constraints: const BoxConstraints(
+                            minWidth: 15,
+                            minHeight: 15,
+                          ),
+                          child: Text(
+                            '$cardItemsNumber',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 10,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    : Container(),
+              ],
             ),
           ],
           titleTextStyle: const TextStyle(color: Colors.black),
           backgroundColor: Colors.white),
-      body: SingleChildScrollView(
-        child: Column(children: [
-          productImageCarosal,
-          productTitle,
-          darkWhiteSpace(deviceWidth),
-          buttonConatiner(deviceWidth)
-        ]),
-      ),
+      body: FutureBuilder<List<Product>>(
+          future: getProductDetailes(),
+          builder:
+              (BuildContext context, AsyncSnapshot<List<Product>> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return Center(child: Text('Error: ${snapshot.error}'));
+            } else {
+              return SingleChildScrollView(
+                child: Column(children: [
+                  productImageCarosal(snapshot.data?[0].banner),
+                  productTitle(snapshot.data?[0].price, snapshot.data?[0].name),
+                  darkWhiteSpace(deviceWidth),
+                  buttonConatiner(deviceWidth, incrementCardItemsNumber,
+                      incrementInWishList)
+                ]),
+              );
+            }
+          }),
     );
   }
 }
-
-Widget productImageCarosal = CarouselSlider(
-  items: [
-Image.network(
-    "https://assets.myntassets.com/h_1440,q_100,w_1080/v1/assets/images/1997153/2017/9/1/11504245663455-Roadster-Men-White-Printed-Round-Neck-T-shirt-4221504245663186-1.jpg",
-    width: 600,
-    height: 540,
-    fit: BoxFit.cover,
-  ),
-  Image.network(
-    "https://assets.myntassets.com/h_1440,q_100,w_1080/v1/assets/images/1997153/2017/9/1/11504245663455-Roadster-Men-White-Printed-Round-Neck-T-shirt-4221504245663186-1.jpg",
-    width: 600,
-    height: 540,
-    fit: BoxFit.cover,
-  ),
-  ],
-  options: CarouselOptions(
-            height: 500.0,
-            enlargeCenterPage: true,
-            autoPlay: true,
-            aspectRatio: 16 / 9,
-            autoPlayCurve: Curves.fastOutSlowIn,
-            enableInfiniteScroll: true,
-            autoPlayAnimationDuration: const Duration(milliseconds: 800),
-            viewportFraction: 0.8,
-          ),
-);
-
-Widget productTitle = Container(
-    margin: const EdgeInsets.all(15),
-    child: Column(
-      children: [
-        const Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Text(
-            "Roadster Men Black Solid Pure Cotton T-shirt",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-          ),
-          Text(
-            "Explore brand",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: 13, color: Colors.red),
-          )
-        ]),
-        Container(
-          margin: const EdgeInsets.only(top: 7),
-          child: Row(
-            children: [
-              const Text(
-                "MRP",
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 5, right: 5),
-                child: const Text(
-                  "₹2,799",
-                  style: TextStyle(
-                    decoration: TextDecoration.lineThrough,
-                  ),
-                ),
-              ),
-              const Text(
-                "₹2,799",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              Container(
-                margin: const EdgeInsets.only(left: 8, right: 8),
-                decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.centerLeft,
-                    end: Alignment.centerRight,
-                    colors: [
-                      Color(0x40FF0000), // Red color with less opacity
-                      Color(0x80FF0000), // Red color with full opacity
-                    ],
-                  ),
-                ),
-                padding: const EdgeInsets.only(
-                    left: 10, right: 10, top: 2, bottom: 2),
-                child: const Text("60% OFF!",
-                    style: TextStyle(fontSize: 11, color: Colors.red)),
-              )
-            ],
-          ),
-        )
-      ],
-    ));
-
-var darkWhiteSpace = (deviceWidth) => Container(
-      width: deviceWidth, // Specify the width
-      height: 30.0, // Specify the height
-      color: Colors.grey[200], // Dark white color
-    );
-
-var buttonConatiner = (deviceWidth) => Container(
-      margin: const EdgeInsets.only(top: 25, left: 10, right: 10),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        InkWell(
-           onTap: () => {
-            print("Tab on Add to wishlist")
-          },
-          child: Container(
-            decoration:
-                BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
-            padding:
-                const EdgeInsets.only(left: 35, right: 35, bottom: 10, top: 10),
-            // margin: const EdgeInsets.only(left: 25, right: 5),
-            child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 10, right: 10),
-                    child: const Icon(
-                      Icons.favorite_border,
-                    ),
-                  ),
-                  const Text("WISHLIST"),
-                ]),
-          ),
-        ),
-        InkWell(
-          onTap: () => {
-            print("Tab on Add to bag")
-          },
-          child: Container(
-            padding:
-                const EdgeInsets.only(left: 35, right: 35, bottom: 10, top: 10),
-            // margin: const EdgeInsets.only(left: 25, right: 5),
-            decoration:
-                BoxDecoration(border: Border.all(width: 1, color: Colors.grey,), color: Color.fromARGB(255, 253, 66, 66)),
-            child: Row(
-                // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  Container(
-                      margin: const EdgeInsets.only(left: 10, right: 10),
-                      child: const Icon(Icons.card_travel, color: Colors.white,)),
-                  const Text("ADD TO BAG", style: TextStyle(color: Colors.white),),
-                ]),
-          ),
-        )
-      ]),
-    );

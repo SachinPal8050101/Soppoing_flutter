@@ -1,12 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shopping_flutter/screens/cart_screen.dart';
 import 'package:shopping_flutter/screens/product_detailes.dart';
+import 'package:shopping_flutter/dataSchemas/product_response.dart';
 
-class ProductContainer extends StatelessWidget {
-  final product;
+class ProductContainer extends StatefulWidget {
+  final Product product; 
+  const ProductContainer({Key? key, required this.product}) : super(key: key);
 
-  const ProductContainer({super.key, required this.product});
+  @override
+  State<StatefulWidget> createState() => _ProductContainerState();
+}
+
+class _ProductContainerState extends State<ProductContainer> {
+
+  var isItemInWishList = false;
+
+  void addProductToWishList() {
+    setState(() {
+      isItemInWishList = !isItemInWishList;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +29,7 @@ class ProductContainer extends StatelessWidget {
       onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ProductDetailes()),
+          MaterialPageRoute(builder: (context) =>  ProductDetailes(productId: widget.product.id)),
         ).then((value) => FocusScope.of(context).requestFocus(FocusNode())),
       },
       child: Container(
@@ -35,7 +48,7 @@ class ProductContainer extends StatelessWidget {
                   AspectRatio(
                     aspectRatio: 1,
                     child: Image.network(
-                      product?.banner,
+                      widget.product!.banner,
                       width: deviceWidth / 2,
                       fit: BoxFit.fill,
                     ),
@@ -50,18 +63,19 @@ class ProductContainer extends StatelessWidget {
                           children: [
                             Flexible(
                               child: Text(
-                                product?.name ?? '',
+                                widget.product?.name ?? '',
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(
                                     fontSize: 15, fontWeight: FontWeight.w900),
                               ),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.favorite_border),
+                              icon: isItemInWishList ? const Icon(Icons.favorite, color: Colors.red,) : const Icon(Icons.favorite_border),
                               color: Colors.black,
                               splashRadius: 1,
                               iconSize: 20,
                               onPressed: () {
+                                addProductToWishList();
                                 if (kDebugMode) {
                                   print('Notification button pressed');
                                 }
@@ -70,7 +84,7 @@ class ProductContainer extends StatelessWidget {
                           ],
                         ),
                         Text(
-                          product?.description ?? '',
+                          widget.product?.description ?? '',
                           overflow: TextOverflow.ellipsis,
                           style:
                               const TextStyle(fontSize: 11, color: Colors.grey),
@@ -88,7 +102,7 @@ class ProductContainer extends StatelessWidget {
                             Container(
                                 margin:
                                     const EdgeInsets.only(left: 8, right: 8),
-                                child: Text(product?.price.toString() ?? '',
+                                child: Text(widget.product?.price.toString() ?? '',
                                     style: const TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold))),
@@ -118,7 +132,7 @@ class ProductContainer extends StatelessWidget {
                             Container(
                                 margin: const EdgeInsets.only(right: 2),
                                 child: Text(
-                                  product?.price.toString() ?? '',
+                                  widget.product?.price.toString() ?? '',
                                   style: const TextStyle(
                                       fontSize: 12,
                                       color: Colors.green,
