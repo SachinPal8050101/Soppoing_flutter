@@ -5,14 +5,14 @@ import 'package:shopping_flutter/logic/cubits/product_cubit/product_state.dart';
 
 class ProductCubit extends Cubit<ProductState> {
   ProductCubit() : super(ProductLoadingState()) {
-    fetchPosts();
+    fetchProducts();
   }
 
   ProductReposoitories postRepository = ProductReposoitories();
 
-  void fetchPosts() async {
+  void fetchProducts() async {
     try {
-      List<ProductModel> products = await postRepository.fetchPosts();
+      List<ProductModel> products = await postRepository.fetchProducts();
       emit(ProductLoadedState(products));
     } catch (ex) {
       emit(ProductErrorState(
