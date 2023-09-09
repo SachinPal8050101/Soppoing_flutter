@@ -43,7 +43,7 @@ class _ProductDetailesState extends State<ProductDetailes> {
     };
 
     final response = await http.get(Uri.http(
-        '192.168.3.212:5002', '/product/productById', queryParameters));
+        '192.168.231.35:5002', '/product/productById', queryParameters));
     if (response.statusCode == 200) {
       final List<Product> products = parseProducts(response.body);
       return products;
@@ -88,7 +88,8 @@ class _ProductDetailesState extends State<ProductDetailes> {
               width: 250,
               child: Text(
                 title ?? '',
-                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                style:
+                    const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

@@ -24,7 +24,7 @@ class CartScreen extends StatelessWidget {
           ],
           titleTextStyle: const TextStyle(color: Colors.black),
           backgroundColor: Colors.white),
-          body: const Center(
+      body: const Center(
         child: Text('This is a new screen'),
       ),
     );

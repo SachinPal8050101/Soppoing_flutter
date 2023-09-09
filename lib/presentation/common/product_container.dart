@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shopping_flutter/screens/product_detailes.dart';
-import 'package:shopping_flutter/dataSchemas/product_response.dart';
+import 'package:shopping_flutter/data/models/product_model.dart';
+import 'package:shopping_flutter/presentation/screens/product_detailes.dart';
 
 class ProductContainer extends StatefulWidget {
-  final Product product; 
+  final ProductModel product;
   const ProductContainer({Key? key, required this.product}) : super(key: key);
 
   @override
@@ -12,7 +12,6 @@ class ProductContainer extends StatefulWidget {
 }
 
 class _ProductContainerState extends State<ProductContainer> {
-
   var isItemInWishList = false;
 
   void addProductToWishList() {
@@ -29,7 +28,9 @@ class _ProductContainerState extends State<ProductContainer> {
       onTap: () => {
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) =>  ProductDetailes(productId: widget.product.id)),
+          MaterialPageRoute(
+              builder: (context) =>
+                  ProductDetailes(productId: widget.product.id.toString())),
         ).then((value) => FocusScope.of(context).requestFocus(FocusNode())),
       },
       child: Container(
@@ -48,7 +49,7 @@ class _ProductContainerState extends State<ProductContainer> {
                   AspectRatio(
                     aspectRatio: 1,
                     child: Image.network(
-                      widget.product!.banner,
+                      widget.product!.banner.toString(),
                       width: deviceWidth / 2,
                       fit: BoxFit.fill,
                     ),
@@ -70,7 +71,12 @@ class _ProductContainerState extends State<ProductContainer> {
                               ),
                             ),
                             IconButton(
-                              icon: isItemInWishList ? const Icon(Icons.favorite, color: Colors.red,) : const Icon(Icons.favorite_border),
+                              icon: isItemInWishList
+                                  ? const Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                    )
+                                  : const Icon(Icons.favorite_border),
                               color: Colors.black,
                               splashRadius: 1,
                               iconSize: 20,
@@ -84,7 +90,7 @@ class _ProductContainerState extends State<ProductContainer> {
                           ],
                         ),
                         Text(
-                          widget.product?.description ?? '',
+                          widget.product.desc.toString(),
                           overflow: TextOverflow.ellipsis,
                           style:
                               const TextStyle(fontSize: 11, color: Colors.grey),
@@ -102,7 +108,8 @@ class _ProductContainerState extends State<ProductContainer> {
                             Container(
                                 margin:
                                     const EdgeInsets.only(left: 8, right: 8),
-                                child: Text(widget.product?.price.toString() ?? '',
+                                child: Text(
+                                    widget.product.price.toString() ?? '',
                                     style: const TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold))),
@@ -132,7 +139,7 @@ class _ProductContainerState extends State<ProductContainer> {
                             Container(
                                 margin: const EdgeInsets.only(right: 2),
                                 child: Text(
-                                  widget.product?.price.toString() ?? '',
+                                  widget.product.price.toString(),
                                   style: const TextStyle(
                                       fontSize: 12,
                                       color: Colors.green,
