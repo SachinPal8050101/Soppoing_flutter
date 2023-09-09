@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
+import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_cubit.dart';
+import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_state.dart';
 
 class ProductDetailes extends StatefulWidget {
   final String productId;
@@ -24,32 +27,6 @@ class _ProductDetailesState extends State<ProductDetailes> {
     setState(() {
       wishListItemNumber++;
     });
-  }
-
-  List<ProductModel> parseProducts(String responseBody) {
-    final Map<String, dynamic> data = json.decode(responseBody);
-
-    if (data != null) {
-      final List<dynamic> dataList = data['data'];
-      return dataList.map<ProductModel>((json) => ProductModel.fromJson(json)).toList();
-    } else {
-      throw Exception('Invalid response format');
-    }
-  }
-
-  Future<List<ProductModel>> getProductDetailes() async {
-    var queryParameters = {
-      'productId': widget.productId,
-    };
-
-    final response = await http.get(Uri.http(
-        '192.168.231.35:5002', '/product/productById', queryParameters));
-    if (response.statusCode == 200) {
-      final List<ProductModel> products = parseProducts(response.body);
-      return products;
-    } else {
-      throw Exception('Failed to load data');
-    }
   }
 
   Widget productImageCarosal(banner) => CarouselSlider(
@@ -210,114 +187,121 @@ class _ProductDetailesState extends State<ProductDetailes> {
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      appBar: AppBar(
-          elevation: 0.0,
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back,
-                color: Colors.black), // Change color as needed
-            onPressed: () => Navigator.of(context).pop(),
-          ),
-          title: const Text("Product"),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.share, color: Colors.black),
-              onPressed: () {
-                // Handle the onPressed event here
-              },
+        appBar: AppBar(
+            elevation: 0.0,
+            leading: IconButton(
+              icon: const Icon(Icons.arrow_back,
+                  color: Colors.black), // Change color as needed
+              onPressed: () => Navigator.of(context).pop(),
             ),
-            Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.favorite_border, color: Colors.black),
-                  onPressed: () {
-                    // Handle the onPressed event here
-                  },
-                ),
-                wishListItemNumber > 0
-                    ? Positioned(
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(1),
-                          margin: const EdgeInsets.only(right: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 15,
-                            minHeight: 15,
-                          ),
-                          child: Text(
-                            '$wishListItemNumber',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
+            title: const Text("Product"),
+            actions: <Widget>[
+              IconButton(
+                icon: const Icon(Icons.share, color: Colors.black),
+                onPressed: () {
+                  // Handle the onPressed event here
+                },
+              ),
+              Stack(
+                children: [
+                  IconButton(
+                    icon:
+                        const Icon(Icons.favorite_border, color: Colors.black),
+                    onPressed: () {
+                      // Handle the onPressed event here
+                    },
+                  ),
+                  wishListItemNumber > 0
+                      ? Positioned(
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(1),
+                            margin: const EdgeInsets.only(right: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
                             ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
-            Stack(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.card_travel, color: Colors.black),
-                  onPressed: () {
-                    // Handle the onPressed event here
-                  },
-                ),
-                cardItemsNumber > 0
-                    ? Positioned(
-                        right: 0,
-                        child: Container(
-                          padding: const EdgeInsets.all(1),
-                          margin: const EdgeInsets.only(right: 6),
-                          decoration: BoxDecoration(
-                            color: Colors.red,
-                            borderRadius: BorderRadius.circular(6),
-                          ),
-                          constraints: const BoxConstraints(
-                            minWidth: 15,
-                            minHeight: 15,
-                          ),
-                          child: Text(
-                            '$cardItemsNumber',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
+                            constraints: const BoxConstraints(
+                              minWidth: 15,
+                              minHeight: 15,
                             ),
-                            textAlign: TextAlign.center,
+                            child: Text(
+                              '$wishListItemNumber',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ),
-                      )
-                    : Container(),
-              ],
-            ),
-          ],
-          titleTextStyle: const TextStyle(color: Colors.black),
-          backgroundColor: Colors.white),
-      body: FutureBuilder<List<ProductModel>>(
-          future: getProductDetailes(),
-          builder:
-              (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
-            } else {
+                        )
+                      : Container(),
+                ],
+              ),
+              Stack(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.card_travel, color: Colors.black),
+                    onPressed: () {
+                      // Handle the onPressed event here
+                    },
+                  ),
+                  cardItemsNumber > 0
+                      ? Positioned(
+                          right: 0,
+                          child: Container(
+                            padding: const EdgeInsets.all(1),
+                            margin: const EdgeInsets.only(right: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 15,
+                              minHeight: 15,
+                            ),
+                            child: Text(
+                              '$cardItemsNumber',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ],
+              ),
+            ],
+            titleTextStyle: const TextStyle(color: Colors.black),
+            backgroundColor: Colors.white),
+        body: BlocConsumer<SingleProductCubit, SingleProductState>(
+          listener: (context, state) {},
+          builder: (context, state) {
+            if (state is SingleProductLoadingState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            if (state is SingleProductLoadedState) {
+              final ProductModel product = state.product[0];
               return SingleChildScrollView(
                 child: Column(children: [
-                  productImageCarosal(snapshot.data?[0].banner),
-                  productTitle(snapshot.data?[0].price, snapshot.data?[0].name),
+                  productImageCarosal(product.banner),
+                  productTitle(product.price, product.name),
                   darkWhiteSpace(deviceWidth),
                   buttonConatiner(deviceWidth, incrementCardItemsNumber,
                       incrementInWishList)
                 ]),
               );
             }
-          }),
-    );
+
+            return Center(
+              child: Text("An error occured! ${state.error.toString()}"),
+            );
+          },
+        ));
   }
 }

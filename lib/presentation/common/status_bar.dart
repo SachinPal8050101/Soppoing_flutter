@@ -27,20 +27,14 @@ class CustomeStatusBar extends StatelessWidget implements PreferredSizeWidget {
               ),
               Row(
                 children: [
-                  InkWell(
-                    borderRadius: BorderRadius.circular(3000.0),
-                    splashColor: Colors.black.withOpacity(0.3),
-                    onTap: () {
-                      // Handle your onTap here.
+                  IconButton(
+                    icon: const Icon(Icons.notifications),
+                    color: Colors.black,
+                    onPressed: () {
                       if (kDebugMode) {
-                        print('Image tapped!');
+                        print('Notification button pressed');
                       }
                     },
-                    child: Image.asset(
-                      'assets/icons/notification_icon.png',
-                      height: 30,
-                      width: 30,
-                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.favorite_border),

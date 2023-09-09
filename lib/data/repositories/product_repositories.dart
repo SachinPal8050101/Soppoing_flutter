@@ -13,7 +13,22 @@ class ProductReposoitories {
           .map((productMap) => ProductModel.fromJson(productMap))
           .toList();
     } catch (ex) {
-      throw ex;
+      rethrow;
+    }
+  }
+
+  Future<List<ProductModel>> fetchSingleProductById() async {
+     var queryParameters = {
+      'productId': "64f1b92548265a210f61917f",
+    };
+    try {
+      Response response = await api.sendRequest.get("product/productById",   queryParameters: queryParameters);
+      List<dynamic> productsMap = response.data["data"];
+      return productsMap
+          .map((productMap) => ProductModel.fromJson(productMap))
+          .toList();
+    } catch (ex) {
+      rethrow;
     }
   }
 

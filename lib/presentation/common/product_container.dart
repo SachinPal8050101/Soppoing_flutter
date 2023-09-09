@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
-import 'package:shopping_flutter/presentation/screens/product_detailes.dart';
+import 'package:shopping_flutter/presentation/screens/product_details.dart';
 
 class ProductContainer extends StatefulWidget {
   final ProductModel product;
