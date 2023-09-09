@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:shopping_flutter/dataSchemas/product_response.dart';
+import 'package:shopping_flutter/data/models/product_model.dart';
 
 class ProductDetailes extends StatefulWidget {
   final String productId;
@@ -26,18 +26,18 @@ class _ProductDetailesState extends State<ProductDetailes> {
     });
   }
 
-  List<Product> parseProducts(String responseBody) {
+  List<ProductModel> parseProducts(String responseBody) {
     final Map<String, dynamic> data = json.decode(responseBody);
 
     if (data != null) {
       final List<dynamic> dataList = data['data'];
-      return dataList.map<Product>((json) => Product.fromJson(json)).toList();
+      return dataList.map<ProductModel>((json) => ProductModel.fromJson(json)).toList();
     } else {
       throw Exception('Invalid response format');
     }
   }
 
-  Future<List<Product>> getProductDetailes() async {
+  Future<List<ProductModel>> getProductDetailes() async {
     var queryParameters = {
       'productId': widget.productId,
     };
@@ -45,7 +45,7 @@ class _ProductDetailesState extends State<ProductDetailes> {
     final response = await http.get(Uri.http(
         '192.168.231.35:5002', '/product/productById', queryParameters));
     if (response.statusCode == 200) {
-      final List<Product> products = parseProducts(response.body);
+      final List<ProductModel> products = parseProducts(response.body);
       return products;
     } else {
       throw Exception('Failed to load data');
@@ -298,10 +298,10 @@ class _ProductDetailesState extends State<ProductDetailes> {
           ],
           titleTextStyle: const TextStyle(color: Colors.black),
           backgroundColor: Colors.white),
-      body: FutureBuilder<List<Product>>(
+      body: FutureBuilder<List<ProductModel>>(
           future: getProductDetailes(),
           builder:
-              (BuildContext context, AsyncSnapshot<List<Product>> snapshot) {
+              (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
