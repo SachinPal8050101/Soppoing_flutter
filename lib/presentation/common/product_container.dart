@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
-import 'package:shopping_flutter/presentation/screens/product_details.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_state.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
-import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_cubit.dart';
 
 class ProductContainer extends StatefulWidget {
   final ProductModel product;
@@ -23,15 +20,8 @@ class _ProductContainerState extends State<ProductContainer> {
     final double deviceHeight = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: () => {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => BlocProvider(
-                    create: (context) => SingleProductCubit(),
-                    child: ProductDetailes(
-                        productId: widget.product.id.toString()),
-                  )),
-        ).then((value) => FocusScope.of(context).requestFocus(FocusNode())),
+
+        Navigator.pushNamed(context, '/product_details', arguments: widget.product.id).then((value) => FocusScope.of(context).requestFocus(FocusNode())),
       },
       child: Container(
         decoration: BoxDecoration(
@@ -88,7 +78,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                   splashRadius: 1,
                                   iconSize: 20,
                                   onPressed: () {
-                                  
+                                
                                   },
                                 );
                               },
