@@ -1,9 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
+import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_state.dart';
+import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
 import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_cubit.dart';
 import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_state.dart';
 
@@ -202,76 +202,96 @@ class _ProductDetailesState extends State<ProductDetailes> {
                   // Handle the onPressed event here
                 },
               ),
-              Stack(
-                children: [
-                  IconButton(
-                    icon:
-                        const Icon(Icons.favorite_border, color: Colors.black),
-                    onPressed: () {
-                      // Handle the onPressed event here
-                    },
-                  ),
-                  wishListItemNumber > 0
-                      ? Positioned(
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(1),
-                            margin: const EdgeInsets.only(right: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 15,
-                              minHeight: 15,
-                            ),
-                            child: Text(
-                              '$wishListItemNumber',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
+              BlocBuilder<CustomerCubit, CustomerState>(
+                builder: (context, state) {
+                  int wishListItemNumber = 0;
+                  if (state is CustomerLoadedState) {
+                    wishListItemNumber =
+                        state.customer.customeWishlist?.length ?? 0;
+                  }
+
+                  return Stack(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.favorite_border,
+                            color: Colors.black),
+                        onPressed: () {
+                          // Handle the onPressed event here
+                        },
+                      ),
+                      wishListItemNumber > 0
+                          ? Positioned(
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(1),
+                                margin: const EdgeInsets.only(right: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 15,
+                                  minHeight: 15,
+                                ),
+                                child: Text(
+                                  '$wishListItemNumber',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        )
-                      : Container(),
-                ],
+                            )
+                          : Container(),
+                    ],
+                  );
+                },
               ),
-              Stack(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.card_travel, color: Colors.black),
-                    onPressed: () {
-                      // Handle the onPressed event here
-                    },
-                  ),
-                  cardItemsNumber > 0
-                      ? Positioned(
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.all(1),
-                            margin: const EdgeInsets.only(right: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.red,
-                              borderRadius: BorderRadius.circular(6),
-                            ),
-                            constraints: const BoxConstraints(
-                              minWidth: 15,
-                              minHeight: 15,
-                            ),
-                            child: Text(
-                              '$cardItemsNumber',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
+              BlocBuilder<CustomerCubit, CustomerState>(
+                builder: (context, state) {
+                  int cardItemsNumber = 0;
+                  if (state is CustomerLoadedState) {
+                    cardItemsNumber =
+                        state.customer.customeCart?.length ?? 0;
+                  }
+                  return Stack(
+                    children: [
+                      IconButton(
+                        icon:
+                            const Icon(Icons.card_travel, color: Colors.black),
+                        onPressed: () {
+                          // Handle the onPressed event here
+                        },
+                      ),
+                      cardItemsNumber > 0
+                          ? Positioned(
+                              right: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(1),
+                                margin: const EdgeInsets.only(right: 6),
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(6),
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 15,
+                                  minHeight: 15,
+                                ),
+                                child: Text(
+                                  '$cardItemsNumber',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
                               ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        )
-                      : Container(),
-                ],
+                            )
+                          : Container(),
+                    ],
+                  );
+                },
               ),
             ],
             titleTextStyle: const TextStyle(color: Colors.black),

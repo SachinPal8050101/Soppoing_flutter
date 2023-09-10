@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/presentation/common/status_bar.dart';
 import 'package:shopping_flutter/presentation/screens/products_screen.dart';
 import 'package:shopping_flutter/logic/cubits/product_cubit/product_cubit.dart';
-import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_cubit.dart';
+import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,17 +17,17 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => ProductCubit(),
-        ),
-        BlocProvider(
-          create: (context) => SingleProductCubit(),
+          create: (context) => CustomerCubit(),
         ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         home: Scaffold(
           appBar: const CustomeStatusBar(),
-          body: const ProductGridState(),
+          body: BlocProvider(
+            create: (context) => ProductCubit(),
+            child: const ProductGridState(),
+          ),
           bottomNavigationBar: BottomNavigationBar(
             backgroundColor: Colors.white,
             items: [

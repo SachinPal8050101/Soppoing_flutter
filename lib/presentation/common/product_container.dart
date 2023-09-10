@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
 import 'package:shopping_flutter/presentation/screens/product_details.dart';
+import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_cubit.dart';
 
 class ProductContainer extends StatefulWidget {
   final ProductModel product;
@@ -29,8 +31,11 @@ class _ProductContainerState extends State<ProductContainer> {
         Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) =>
-                  ProductDetailes(productId: widget.product.id.toString())),
+              builder: (context) => BlocProvider(
+                    create: (context) => SingleProductCubit(),
+                    child: ProductDetailes(
+                        productId: widget.product.id.toString()),
+                  )),
         ).then((value) => FocusScope.of(context).requestFocus(FocusNode())),
       },
       child: Container(
