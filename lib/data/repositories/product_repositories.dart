@@ -17,9 +17,9 @@ class ProductReposoitories {
     }
   }
 
-  Future<List<ProductModel>> fetchSingleProductById() async {
+  Future<List<ProductModel>> fetchSingleProductById(String productId) async {
      var queryParameters = {
-      'productId': "64f1b92548265a210f61917f",
+      'productId': productId,
     };
     try {
       Response response = await api.sendRequest.get("product/productById",   queryParameters: queryParameters);

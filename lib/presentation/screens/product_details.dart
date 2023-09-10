@@ -23,6 +23,12 @@ class _ProductDetailesState extends State<ProductDetailes> {
     });
   }
 
+  @override
+  void initState() {
+    super.initState();
+    context.read<SingleProductCubit>().fetchSingleProduct(widget.productId);
+  }
+
   void incrementInWishList() {
     setState(() {
       wishListItemNumber++;
@@ -252,8 +258,7 @@ class _ProductDetailesState extends State<ProductDetailes> {
                 builder: (context, state) {
                   int cardItemsNumber = 0;
                   if (state is CustomerLoadedState) {
-                    cardItemsNumber =
-                        state.customer.customeCart?.length ?? 0;
+                    cardItemsNumber = state.customer.customeCart?.length ?? 0;
                   }
                   return Stack(
                     children: [
