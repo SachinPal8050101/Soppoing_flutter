@@ -7,7 +7,7 @@ class CustomerReposoitories {
 
   Future<CustomerModal> getCustomerProfile() async {
     var token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjFiYzBjNTFkOTkyNmMzMWYzZmIxZiIsImVtYWlsIjoic2FjaGluLmt1bWFyMUBzZGFmZm9kaWxzdy5jb20iLCJpYXQiOjE2OTQzMzM2MzcsImV4cCI6MTY5NDMzNzIzN30.WpdD4eM5IjcOzDkGyUXsLbIoFMSRMFoQvQTTQ5P9dcE';
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjFiYzBjNTFkOTkyNmMzMWYzZmIxZiIsImVtYWlsIjoic2FjaGluLmt1bWFyMUBzZGFmZm9kaWxzdy5jb20iLCJpYXQiOjE2OTQzMzkzOTQsImV4cCI6MTY5NDM0Mjk5NH0.nDFMvJyjclxrEFPMGVbTBhZHsy0fT2kx9K_c4iLbzL0';
     try {
       Response response = await api.sendRequest.get(
         "customer/getProfile",

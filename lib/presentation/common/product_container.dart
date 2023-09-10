@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
 import 'package:shopping_flutter/presentation/screens/product_details.dart';
+import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_state.dart';
+import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
 import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_cubit.dart';
 
 class ProductContainer extends StatefulWidget {
@@ -14,13 +16,6 @@ class ProductContainer extends StatefulWidget {
 }
 
 class _ProductContainerState extends State<ProductContainer> {
-  var isItemInWishList = false;
-
-  void addProductToWishList() {
-    setState(() {
-      isItemInWishList = !isItemInWishList;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,21 +70,27 @@ class _ProductContainerState extends State<ProductContainer> {
                                     fontSize: 15, fontWeight: FontWeight.w900),
                               ),
                             ),
-                            IconButton(
-                              icon: isItemInWishList
-                                  ? const Icon(
-                                      Icons.favorite,
-                                      color: Colors.red,
-                                    )
-                                  : const Icon(Icons.favorite_border),
-                              color: Colors.black,
-                              splashRadius: 1,
-                              iconSize: 20,
-                              onPressed: () {
-                                addProductToWishList();
-                                if (kDebugMode) {
-                                  print('Notification button pressed');
+                            BlocBuilder<CustomerCubit, CustomerState>(
+                              builder: (context, state) {
+                                var isItemInWishList = false;
+                                if( state is CustomerLoadedState){
+                                   isItemInWishList = state.customer.customeWishlist!.any((item) => item['productId'] == widget.product.id);
+           
                                 }
+                                return IconButton(
+                                  icon: isItemInWishList
+                                      ? const Icon(
+                                          Icons.favorite,
+                                          color: Colors.red,
+                                        )
+                                      : const Icon(Icons.favorite_border),
+                                  color: Colors.black,
+                                  splashRadius: 1,
+                                  iconSize: 20,
+                                  onPressed: () {
+                                  
+                                  },
+                                );
                               },
                             ),
                           ],
