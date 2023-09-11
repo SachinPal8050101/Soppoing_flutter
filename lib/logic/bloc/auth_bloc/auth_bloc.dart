@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/data/models/login_signup_model.dart';
 import 'package:shopping_flutter/data/repositories/customer_repositories.dart';
 
-
-
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   AuthBloc() : super(AuthInitial()) {
     on<AuthEvent>((event, emit) async {
@@ -15,8 +13,14 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         } else {
           CustomerReposoitories customnerRepo = CustomerReposoitories();
           emit(AuthLoading());
-          LogInSignUpModal logInData = await customnerRepo.logInCustomer(event.userName, event.password);
-          emit(AuthLoaded(logInData.token, logInData.token));
+          try {
+            LogInSignUpModal logInData = await customnerRepo.logInCustomer(
+                event.userName, event.password);
+            emit(AuthLoaded(logInData.token, logInData.token));
+          } catch (ex) {
+            emit(AuthError());
+            throw 'error ';
+          }
         }
       }
     });

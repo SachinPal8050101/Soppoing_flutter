@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/presentation/routes.dart';
+import 'package:shopping_flutter/utils/secure_storage.dart';
 import 'package:shopping_flutter/logic/bloc/auth_bloc/auth_bloc.dart';
 import 'package:shopping_flutter/presentation/common/status_bar.dart';
 import 'package:shopping_flutter/presentation/screens/products_screen.dart';
@@ -11,48 +12,68 @@ void main() {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  Future<String?> getAccessToken() async {
+    String? val = await SecureStorage.getKeyByName('token');
+    return val;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (context) => CustomerCubit('sds'),
-        ),
-         BlocProvider(
-          create: (context) => AuthBloc(),
-        ),
-      ],
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        onGenerateRoute: Routes.generateRoute,
-        home: Scaffold(
-          appBar: const CustomeStatusBar(),
-          body: BlocProvider(
-            create: (context) => ProductCubit(),
-            child: const ProductGridState(),
-          ),
-          bottomNavigationBar: BottomNavigationBar(
-            backgroundColor: Colors.white,
-            items: [
-              BottomNavigationBarItem(
-                icon: Image.network(
-                  'https://gumlet.assettype.com/afaqs%2F2021-01%2F15f5f827-8e29-4520-af8d-a0f353b8da17%2Fimages.png?auto=format%2Ccompress&w=1200',
-                  height: 23,
-                  width: 23,
-                ),
-                label: 'Home',
+    return FutureBuilder<String?>(
+      future: getAccessToken(),
+      builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const MaterialApp(home: Scaffold(body: Center(child: CircularProgressIndicator())));  // or your custom loader
+        } else {
+          return MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => CustomerCubit(snapshot.data),
               ),
-              const BottomNavigationBarItem(
-                icon: Icon(Icons.person),
-                label: 'Profile',
-              )
+              BlocProvider(
+                create: (context) => AuthBloc(),
+              ),
             ],
-          ),
-        ),
-      ),
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              onGenerateRoute: Routes.generateRoute,
+              home: Scaffold(
+                appBar: const CustomeStatusBar(),
+                body: BlocProvider(
+                  create: (context) => ProductCubit(),
+                  child: const ProductGridState(),
+                ),
+                bottomNavigationBar: BottomNavigationBar(
+                  backgroundColor: Colors.white,
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Image.network(
+                        'https://gumlet.assettype.com/afaqs%2F2021-01%2F15f5f827-8e29-4520-af8d-a0f353b8da17%2Fimages.png?auto=format%2Ccompress&w=1200',
+                        height: 23,
+                        width: 23,
+                      ),
+                      label: 'Home',
+                    ),
+                    const BottomNavigationBarItem(
+                      icon: Icon(Icons.person),
+                      label: 'Profile',
+                    )
+                  ],
+                ),
+              ),
+            ),
+          );
+        }
+      },
     );
   }
 }

@@ -4,7 +4,7 @@ import 'package:shopping_flutter/data/repositories/customer_repositories.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_state.dart';
 
 class CustomerCubit extends Cubit<CustomerState> {
-   final String id;
+   final String? id;
   CustomerCubit(this.id) : super(CustomerLoadingState()) {
     getCustomerProfile(id);
   }
