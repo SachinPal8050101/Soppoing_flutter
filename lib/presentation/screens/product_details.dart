@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
+import 'package:shopping_flutter/presentation/screens/customer_sign_screen.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_state.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
 import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_cubit.dart';
@@ -132,13 +133,13 @@ class _ProductDetailesState extends State<ProductDetailes> {
       );
 
   var buttonConatiner = (deviceWidth, incrementCardItemsNumber,
-          incrementInWishList) =>
+          incrementInWishList, context) =>
       Container(
         margin: const EdgeInsets.only(top: 25, left: 10, right: 10),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
           InkWell(
-            onTap: () => {incrementInWishList()},
+            onTap: () => {showModalBottomSheets(context)},
             child: Container(
               decoration: BoxDecoration(
                   border: Border.all(width: 1, color: Colors.grey)),
@@ -318,7 +319,7 @@ class _ProductDetailesState extends State<ProductDetailes> {
                   productTitle(product.price, product.name),
                   darkWhiteSpace(deviceWidth),
                   buttonConatiner(deviceWidth, incrementCardItemsNumber,
-                      incrementInWishList)
+                      incrementInWishList, context)
                 ]),
               );
             }

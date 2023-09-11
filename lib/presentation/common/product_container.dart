@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
+import 'package:shopping_flutter/presentation/screens/customer_sign_screen.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_state.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
 
@@ -78,7 +79,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                   splashRadius: 1,
                                   iconSize: 20,
                                   onPressed: () {
-                                
+                                     showModalBottomSheets(context);
                                   },
                                 );
                               },

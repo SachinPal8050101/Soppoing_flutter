@@ -4,15 +4,16 @@ import 'package:shopping_flutter/data/repositories/customer_repositories.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_state.dart';
 
 class CustomerCubit extends Cubit<CustomerState> {
-  CustomerCubit() : super(CustomerLoadingState()) {
-    getCustomerProfile();
+   final String id;
+  CustomerCubit(this.id) : super(CustomerLoadingState()) {
+    getCustomerProfile(id);
   }
 
   CustomerReposoitories customerRepo = CustomerReposoitories();
 
-  void getCustomerProfile() async {
+  void getCustomerProfile(id) async {
     try {
-      CustomerModal customer = await customerRepo.getCustomerProfile();
+      CustomerModal customer = await customerRepo.getCustomerProfile(id);
       emit(CustomerLoadedState(customer));
     } catch (ex) {
       emit(CustomerErrorState("Can't fetch cutomer,$ex"));

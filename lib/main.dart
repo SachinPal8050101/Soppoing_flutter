@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/presentation/routes.dart';
+import 'package:shopping_flutter/logic/bloc/auth_bloc/auth_bloc.dart';
 import 'package:shopping_flutter/presentation/common/status_bar.dart';
 import 'package:shopping_flutter/presentation/screens/products_screen.dart';
 import 'package:shopping_flutter/logic/cubits/product_cubit/product_cubit.dart';
@@ -18,7 +19,10 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => CustomerCubit(),
+          create: (context) => CustomerCubit('sds'),
+        ),
+         BlocProvider(
+          create: (context) => AuthBloc(),
         ),
       ],
       child: MaterialApp(

@@ -1,13 +1,12 @@
 import 'package:dio/dio.dart';
 import 'package:shopping_flutter/data/repositories/api/api.dart';
 import 'package:shopping_flutter/data/models/customer_model.dart';
+import 'package:shopping_flutter/data/models/login_signup_model.dart';
 
 class CustomerReposoitories {
   API api = API();
 
-  Future<CustomerModal> getCustomerProfile() async {
-    var token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0ZjFiYzBjNTFkOTkyNmMzMWYzZmIxZiIsImVtYWlsIjoic2FjaGluLmt1bWFyMUBzZGFmZm9kaWxzdy5jb20iLCJpYXQiOjE2OTQzNTY5MDIsImV4cCI6MTY5NDM2MDUwMn0.AgK-u4NVAYbYXhsRhFk0DyxOfXZP6WvFtJkczaD1iiA';
+  Future<CustomerModal> getCustomerProfile(token) async {
     try {
       Response response = await api.sendRequest.get(
         "customer/getProfile",
@@ -32,6 +31,34 @@ class CustomerReposoitories {
       }
     } catch (ex) {
       rethrow;
+    }
+  }
+
+  Future<LogInSignUpModal> logInCustomer(String email, String password) async {
+    var data = {'email': email, 'password': password};
+
+    try {
+      Response response = await api.sendRequest.post(
+        "customer/signin",
+        data: data,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      if (response.statusCode == 200) {
+        try {
+          return LogInSignUpModal.fromJson(response.data);
+        } catch (e) {
+          return LogInSignUpModal.fromJson(response.data);
+        }
+      } else {
+        throw Exception('Failed to load customer profile');
+      }
+    } catch (ex) {
+      throw Exception('Can not log in');
     }
   }
 }
