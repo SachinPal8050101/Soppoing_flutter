@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
+import 'package:shopping_flutter/logic/bloc/customer_bloc/customer_bloc.dart';
 import 'package:shopping_flutter/presentation/screens/customer_sign_screen.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_state.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
+import 'package:shopping_flutter/logic/bloc/customer_bloc/customer_bloc_event.dart';
 import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_cubit.dart';
 import 'package:shopping_flutter/logic/cubits/single_product_cubit/single_product_state.dart';
 
@@ -133,61 +135,102 @@ class _ProductDetailesState extends State<ProductDetailes> {
       );
 
   var buttonConatiner = (deviceWidth, incrementCardItemsNumber,
-          incrementInWishList, context) =>
+          incrementInWishList, context, productId) =>
       Container(
         margin: const EdgeInsets.only(top: 25, left: 10, right: 10),
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          InkWell(
-            onTap: () => {showModalBottomSheets(context)},
-            child: Container(
-              decoration: BoxDecoration(
-                  border: Border.all(width: 1, color: Colors.grey)),
-              padding: const EdgeInsets.only(
-                  left: 35, right: 35, bottom: 10, top: 10),
-              // margin: const EdgeInsets.only(left: 25, right: 5),
-              child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 10, right: 10),
-                      child: const Icon(
-                        Icons.favorite_border,
-                      ),
+        child: BlocBuilder<CustomerCubit, CustomerState>(
+          builder: (context, state) {
+            bool isUserLogedIn = false;
+            if (state is CustomerLoadedState) {
+              isUserLogedIn = true;
+            }
+            return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () => {
+                      if (isUserLogedIn)
+                        {
+                          BlocProvider.of<CustomerBloc>(
+                            context,
+                          ).add(AddToWishList(productId)),
+                        }
+                      else
+                        {
+                          showModalBottomSheets(context),
+                        }
+                    },
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1, color: Colors.grey)),
+                      padding: const EdgeInsets.only(
+                          left: 35, right: 35, bottom: 10, top: 10),
+                      // margin: const EdgeInsets.only(left: 25, right: 5),
+                      child: Row(
+                          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Container(
+                              margin:
+                                  const EdgeInsets.only(left: 10, right: 10),
+                              child: const Icon(
+                                Icons.favorite_border,
+                              ),
+                            ),
+                            const Text("WISHLIST"),
+                          ]),
                     ),
-                    const Text("WISHLIST"),
-                  ]),
-            ),
-          ),
-          InkWell(
-            onTap: () => {incrementCardItemsNumber()},
-            child: Container(
-              padding: const EdgeInsets.only(
-                  left: 35, right: 35, bottom: 10, top: 10),
-              // margin: const EdgeInsets.only(left: 25, right: 5),
-              decoration: BoxDecoration(
-                  border: Border.all(
-                    width: 1,
-                    color: Colors.grey,
                   ),
-                  color: const Color.fromARGB(255, 253, 66, 66)),
-              child: Row(
-                  // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: const Icon(
-                          Icons.card_travel,
-                          color: Colors.white,
-                        )),
-                    const Text(
-                      "ADD TO BAG",
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ]),
-            ),
-          )
-        ]),
+                  BlocBuilder<CustomerCubit, CustomerState>(
+                    builder: (context, state) {
+                      bool isUserLogedIn = false;
+                      if (state is CustomerLoadedState) {
+                        isUserLogedIn = true;
+                      }
+                      return InkWell(
+                        onTap: () => {
+                          if (isUserLogedIn)
+                            {
+                              // BlocProvider.of<CustomerBloc>(
+                              //   context,
+                              // ).add(AddToWishList(productId)),
+                            }
+                          else
+                            {
+                              showModalBottomSheets(context),
+                            }
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.only(
+                              left: 35, right: 35, bottom: 10, top: 10),
+                          // margin: const EdgeInsets.only(left: 25, right: 5),
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                width: 1,
+                                color: Colors.grey,
+                              ),
+                              color: const Color.fromARGB(255, 253, 66, 66)),
+                          child: Row(
+                              // mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Container(
+                                    margin: const EdgeInsets.only(
+                                        left: 10, right: 10),
+                                    child: const Icon(
+                                      Icons.card_travel,
+                                      color: Colors.white,
+                                    )),
+                                const Text(
+                                  "ADD TO BAG",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ]),
+                        ),
+                      );
+                    },
+                  )
+                ]);
+          },
+        ),
       );
 
   @override
@@ -319,7 +362,7 @@ class _ProductDetailesState extends State<ProductDetailes> {
                   productTitle(product.price, product.name),
                   darkWhiteSpace(deviceWidth),
                   buttonConatiner(deviceWidth, incrementCardItemsNumber,
-                      incrementInWishList, context)
+                      incrementInWishList, context, product.id)
                 ]),
               );
             }

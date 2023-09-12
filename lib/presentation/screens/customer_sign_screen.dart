@@ -19,7 +19,7 @@ void showModalBottomSheets(BuildContext context) {
           if (state is AuthLoaded) {
             CustomerCubit customerCubit =
                 BlocProvider.of<CustomerCubit>(context);
-            customerCubit.getCustomerProfile(state.token);
+            customerCubit.getCustomerProfile();
             Navigator.of(context).pop();
             await SecureStorage.addNewKeyInStorage('token', state.token);
           }

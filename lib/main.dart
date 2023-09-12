@@ -5,6 +5,7 @@ import 'package:shopping_flutter/utils/secure_storage.dart';
 import 'package:shopping_flutter/logic/bloc/auth_bloc/auth_bloc.dart';
 import 'package:shopping_flutter/presentation/common/status_bar.dart';
 import 'package:shopping_flutter/presentation/screens/products_screen.dart';
+import 'package:shopping_flutter/logic/bloc/customer_bloc/customer_bloc.dart';
 import 'package:shopping_flutter/logic/cubits/product_cubit/product_cubit.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
 
@@ -21,9 +22,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+ late final CustomerCubit custCubit;
   Future<String?> getAccessToken() async {
     String? val = await SecureStorage.getKeyByName('token');
     return val;
+  }
+
+  @override
+  void initState() {
+    custCubit = CustomerCubit();
+    super.initState();
   }
 
   @override
@@ -37,10 +45,13 @@ class _MyAppState extends State<MyApp> {
           return MultiBlocProvider(
             providers: [
               BlocProvider(
-                create: (context) => CustomerCubit(snapshot.data),
+                create: (context) => custCubit,
               ),
               BlocProvider(
                 create: (context) => AuthBloc(),
+              ),
+               BlocProvider(
+                create: (context) => CustomerBloc(custCubit: custCubit),
               ),
             ],
             child: MaterialApp(

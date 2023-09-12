@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/data/models/product_model.dart';
+import 'package:shopping_flutter/logic/bloc/customer_bloc/customer_bloc.dart';
 import 'package:shopping_flutter/presentation/screens/customer_sign_screen.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_state.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
+import 'package:shopping_flutter/logic/bloc/customer_bloc/customer_bloc_event.dart';
 
 class ProductContainer extends StatefulWidget {
   final ProductModel product;
@@ -21,7 +23,6 @@ class _ProductContainerState extends State<ProductContainer> {
     final double deviceHeight = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: () => {
-
         Navigator.pushNamed(context, '/product_details', arguments: widget.product.id).then((value) => FocusScope.of(context).requestFocus(FocusNode())),
       },
       child: Container(
@@ -64,9 +65,10 @@ class _ProductContainerState extends State<ProductContainer> {
                             BlocBuilder<CustomerCubit, CustomerState>(
                               builder: (context, state) {
                                 var isItemInWishList = false;
+                                bool isUserLogedIn = false;
                                 if( state is CustomerLoadedState){
                                    isItemInWishList = state.customer.customeWishlist!.any((item) => item['productId'] == widget.product.id);
-           
+                                    isUserLogedIn = true;
                                 }
                                 return IconButton(
                                   icon: isItemInWishList
@@ -79,7 +81,11 @@ class _ProductContainerState extends State<ProductContainer> {
                                   splashRadius: 1,
                                   iconSize: 20,
                                   onPressed: () {
-                                     showModalBottomSheets(context);
+                                    if(isUserLogedIn) {
+                                       BlocProvider.of<CustomerBloc>(context, ).add(AddToWishList(widget.product.id.toString()));
+                                    } else {
+                                      showModalBottomSheets(context);
+                                    }
                                   },
                                 );
                               },
