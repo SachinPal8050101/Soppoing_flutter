@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/presentation/routes.dart';
 import 'package:shopping_flutter/utils/secure_storage.dart';
 import 'package:shopping_flutter/logic/bloc/auth_bloc/auth_bloc.dart';
-import 'package:shopping_flutter/presentation/common/status_bar.dart';
 import 'package:shopping_flutter/presentation/screens/products_screen.dart';
 import 'package:shopping_flutter/logic/bloc/customer_bloc/customer_bloc.dart';
 import 'package:shopping_flutter/logic/cubits/product_cubit/product_cubit.dart';
 import 'package:shopping_flutter/logic/cubits/customer_cubit/customer_cubit.dart';
+import 'package:shopping_flutter/presentation/screens/customer_profile_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,13 +16,15 @@ void main() {
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
- late final CustomerCubit custCubit;
+  late final CustomerCubit custCubit;
+
+  int _currentIndex = 0;
+  List<Widget> _screens = [];
   Future<String?> getAccessToken() async {
     String? val = await SecureStorage.getKeyByName('token');
     return val;
@@ -31,6 +33,13 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     custCubit = CustomerCubit();
+    _screens = [
+      BlocProvider(
+        create: (context) => ProductCubit(),
+        child: const ProductGridState(),
+      ),
+      const CustomerProfile(),
+    ];
     super.initState();
   }
 
@@ -40,7 +49,11 @@ class _MyAppState extends State<MyApp> {
       future: getAccessToken(),
       builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const MaterialApp(home: Scaffold(body: Center(child: CircularProgressIndicator())));  // or your custom loader
+          return const MaterialApp(
+              home: Scaffold(
+                  body: Center(
+                      child:
+                          CircularProgressIndicator()))); // or your custom loader
         } else {
           return MultiBlocProvider(
             providers: [
@@ -50,7 +63,7 @@ class _MyAppState extends State<MyApp> {
               BlocProvider(
                 create: (context) => AuthBloc(),
               ),
-               BlocProvider(
+              BlocProvider(
                 create: (context) => CustomerBloc(custCubit: custCubit),
               ),
             ],
@@ -58,13 +71,10 @@ class _MyAppState extends State<MyApp> {
               debugShowCheckedModeBanner: false,
               onGenerateRoute: Routes.generateRoute,
               home: Scaffold(
-                appBar: const CustomeStatusBar(),
-                body: BlocProvider(
-                  create: (context) => ProductCubit(),
-                  child: const ProductGridState(),
-                ),
+                body: _screens[_currentIndex],
                 bottomNavigationBar: BottomNavigationBar(
                   backgroundColor: Colors.white,
+                  currentIndex: _currentIndex,
                   items: [
                     BottomNavigationBarItem(
                       icon: Image.network(
@@ -79,6 +89,11 @@ class _MyAppState extends State<MyApp> {
                       label: 'Profile',
                     )
                   ],
+                  onTap: (index) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
                 ),
               ),
             ),
