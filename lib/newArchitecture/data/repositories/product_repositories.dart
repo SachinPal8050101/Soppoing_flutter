@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
-import 'package:shopping_flutter/data/models/product_model.dart';
-import 'package:shopping_flutter/data/repositories/api/api.dart';
+import 'package:shopping_flutter/newArchitecture/data/models/product_model.dart';
+import 'package:shopping_flutter/newArchitecture/data/repositories/api/api.dart';
 
 class ProductReposoitories {
   API api = API();

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_event.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_state.dart';
+import 'package:shopping_flutter/newArchitecture/common_bloc/customer_profile_bloc/customer_profile_bloc.dart';
+import 'package:shopping_flutter/newArchitecture/common_bloc/customer_profile_bloc/customer_profile_event.dart';
 
 void showModalBottomSheets(BuildContext context) {
   final emailController = TextEditingController();
@@ -53,9 +55,12 @@ void showModalBottomSheets(BuildContext context) {
                     obscureText: true,
                   ),
                   BlocConsumer<SignInBloc, SignInState>(
-                    listener: (context, state) {
+                    listener: (__, state) {
                       if (state is SignInDone) {
-                        Navigator.pop(context);
+                        Navigator.pop(__);
+                         context
+                              .read<CustomerProfileBloc>()
+                              .add(CustomerFetchProfileEvent());
                       }
                     },
                     builder: (__, state) {

@@ -1,5 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:shopping_flutter/utils/secure_storage.dart';
+import 'package:shopping_flutter/newArchitecture/utils/secure_storage.dart';
 import 'package:shopping_flutter/newArchitecture/data/repositories/api/api.dart';
 import 'package:shopping_flutter/newArchitecture/data/models/customer_model.dart';
 import 'package:shopping_flutter/newArchitecture/data/models/login_signup_model.dart';
