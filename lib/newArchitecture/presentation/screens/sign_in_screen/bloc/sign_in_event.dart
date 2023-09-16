@@ -7,3 +7,7 @@ class SignInButtonTab extends SignInEvent {
   String password;
   SignInButtonTab(this.email, this.password);
 }
+
+class SignOutEvent extends SignInEvent {
+  SignOutEvent();
+}

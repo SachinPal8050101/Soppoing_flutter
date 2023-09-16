@@ -19,12 +19,17 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
         CustomerReposoitories customerReposoitories = CustomerReposoitories();
         emit(SignInLoading());
         try {
-          LogInSignUpModal logInData = await customerReposoitories.logInCustomer(event.email, event.password);
-           emit(SignInDone(logInData.token as String));
+          LogInSignUpModal logInData = await customerReposoitories
+              .logInCustomer(event.email, event.password);
+              await SecureStorage.addNewKeyInStorage('token',logInData.token);
+          emit(SignInDone(logInData.token as String));
         } catch (ex) {
           emit(SignInError('Error $ex'));
           throw 'error ';
         }
+      } else if (event is SignOutEvent) {
+        await SecureStorage.deleteKeyByName('token');
+        emit(SignOutState());
       }
     });
   }

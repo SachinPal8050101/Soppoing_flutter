@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_bloc.dart';
+import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_event.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_state.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/customer_sign_screen.dart';
 
@@ -30,15 +31,25 @@ class _HomeState extends State<Home> {
               )
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextButton(
-                style: const ButtonStyle(),
-                onPressed: () => {},
-                child: const Text('Sign out '),
-              )
-            ],
+          BlocConsumer<SignInBloc, SignInState>(
+            listener: (context, state) {
+             
+            },
+            builder: (context, state) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    style: const ButtonStyle(),
+                    onPressed: () => {
+                          context.read<SignInBloc>()
+                              .add(SignOutEvent())
+                    },
+                    child: const Text('Sign out '),
+                  )
+                ],
+              );
+            },
           ),
           BlocConsumer<SignInBloc, SignInState>(
             listener: (context, state) {},
