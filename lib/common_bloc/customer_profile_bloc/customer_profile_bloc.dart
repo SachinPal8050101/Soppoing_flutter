@@ -26,6 +26,14 @@ class CustomerProfileBloc
             emit(CustomerProfileErrorState('Something went wrong'));
           }
         }
+      } else if (event is CustomerAddToWishListEvent) {
+        CustomerReposoitories customerReposoitories = CustomerReposoitories();
+        try {
+          await customerReposoitories.addToWishList(event.productId);
+          add(CustomerFetchProfileEvent());
+        } catch (ex) {
+          emit(CustomerProfileErrorState('Something went wrong'));
+        }
       }
     });
   }
