@@ -3,9 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/main_app.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/common_bloc/customer_profile_bloc/customer_profile_bloc.dart';
+import 'package:shopping_flutter/newArchitecture/presentation/screens/product_detailes_screen/product_details.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => SignInBloc()),
+        BlocProvider(create: (context) => CustomerProfileBloc()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -20,17 +29,23 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => SignInBloc(),
-          ),
-          BlocProvider(
-            create: (context) => CustomerProfileBloc(),
-          ),
-        ],
-        child: const MainApp(),
-      ),
+      home: const MainApp(),
+      routes: {
+        '/Product_Detailes': (context) => const ProductDetailes(productId: 's',),
+      },
+      // routes: {
+      //   '/Product_Detailes': (context) => MultiBlocProvider(
+      //         providers: [
+      //           BlocProvider<SignInBloc>.value(
+      //             value: BlocProvider.of<SignInBloc>(context),
+      //           ),
+      //           BlocProvider<CustomerProfileBloc>.value(
+      //             value: BlocProvider.of<CustomerProfileBloc>(context),
+      //           ),
+      //         ],
+      //         child: const ProductDetailes(productId: 's'),
+      //       ),
+      // },
     );
   }
 }

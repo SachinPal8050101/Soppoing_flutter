@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shopping_flutter/newArchitecture/data/models/product_model.dart';
-import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/customer_sign_screen.dart';
 
 class ProductContainer extends StatefulWidget {
   final ProductModel? product;
 
-   const ProductContainer({Key? key, this.product}) : super(key: key);
+  const ProductContainer({Key? key, this.product}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ProductContainerState();
@@ -18,7 +17,7 @@ class _ProductContainerState extends State<ProductContainer> {
     final double deviceHeight = MediaQuery.of(context).size.height;
     return GestureDetector(
       onTap: () => {
-        showModalBottomSheets(context)
+        Navigator.pushNamed(context, '/Product_Detailes'),
       },
       child: Container(
         decoration: BoxDecoration(
@@ -28,7 +27,6 @@ class _ProductContainerState extends State<ProductContainer> {
         height: deviceHeight / 2 - deviceHeight * 7 / 100,
         width: deviceWidth / 2,
         child: SingleChildScrollView(
-          // Added SingleChildScrollView
           child: Column(
             children: [
               Column(
@@ -72,8 +70,7 @@ class _ProductContainerState extends State<ProductContainer> {
                         const Text(
                           "asda",
                           overflow: TextOverflow.ellipsis,
-                          style:
-                               TextStyle(fontSize: 11, color: Colors.grey),
+                          style: TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                         Row(
                           children: [
@@ -88,8 +85,7 @@ class _ProductContainerState extends State<ProductContainer> {
                             Container(
                                 margin:
                                     const EdgeInsets.only(left: 8, right: 8),
-                                child: const Text(
-                                      '34',
+                                child: const Text('34',
                                     style: TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold))),
