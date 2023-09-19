@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/data/models/product_model.dart';
+import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_bloc.dart';
+import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_state.dart';
+import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/customer_sign_screen.dart';
 
 class ProductContainer extends StatefulWidget {
   final ProductModel product;
@@ -55,15 +59,25 @@ class _ProductContainerState extends State<ProductContainer> {
                                     fontSize: 15, fontWeight: FontWeight.w900),
                               ),
                             ),
-                            IconButton(
-                              icon: const Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              ),
-                              color: Colors.black,
-                              splashRadius: 1,
-                              iconSize: 20,
-                              onPressed: () {},
+                            BlocBuilder<SignInBloc, SignInState>(
+                              builder: (context, state) {
+                                return IconButton(
+                                  icon: const Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  ),
+                                  color: Colors.black,
+                                  splashRadius: 1,
+                                  iconSize: 20,
+                                  onPressed: () {
+                                    if( state is SignInDone){
+                                      print("wishlist added ");
+                                    }else {
+                                      showModalBottomSheets(context);
+                                    }
+                                  },
+                                );
+                              },
                             ),
                           ],
                         ),

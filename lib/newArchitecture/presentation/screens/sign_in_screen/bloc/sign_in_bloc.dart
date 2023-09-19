@@ -4,9 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/utils/secure_storage.dart';
 import 'package:shopping_flutter/newArchitecture/data/models/login_signup_model.dart';
 import 'package:shopping_flutter/newArchitecture/data/repositories/customer_repositories.dart';
+import 'package:shopping_flutter/newArchitecture/common_bloc/customer_profile_bloc/customer_profile_bloc.dart';
+import 'package:shopping_flutter/newArchitecture/common_bloc/customer_profile_bloc/customer_profile_event.dart';
+
+
 
 class SignInBloc extends Bloc<SignInEvent, SignInState> {
   SignInBloc() : super(SignInInitialState()) {
+    CustomerProfileBloc cus = CustomerProfileBloc();
     on<SignInEvent>((event, emit) async {
       if (event is AppStartEvent) {
         var token = await SecureStorage.getKeyByName('token');
@@ -14,6 +19,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
           emit(SignInDone(token));
         } else {
           emit(SignInError('User not loged in'));
+          cus.add(CustomerFetchProfileError());
         }
       } else if (event is SignInButtonTab) {
         CustomerReposoitories customerReposoitories = CustomerReposoitories();
