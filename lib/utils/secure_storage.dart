@@ -13,7 +13,7 @@ class SecureStorage {
 
   static Future<String?> getKeyByName(key) async {
     final String? value;
-    value =  await _storage.read(key: key);
+    value = await _storage.read(key: key);
     return value;
   }
 

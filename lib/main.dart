@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shopping_flutter/newArchitecture/presentation/main_app.dart';
-import 'package:shopping_flutter/newArchitecture/presentation/screens/home/bloc/home_bloc.dart';
-import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_bloc.dart';
-import 'package:shopping_flutter/newArchitecture/common_bloc/customer_profile_bloc/customer_profile_bloc.dart';
-import 'package:shopping_flutter/newArchitecture/presentation/screens/product_detailes_screen/product_details.dart';
+import 'package:shopping_flutter/presentation/main_app.dart';
+import 'package:shopping_flutter/presentation/screens/home/bloc/home_bloc.dart';
+import 'package:shopping_flutter/presentation/screens/sign_in_screen/bloc/sign_in_bloc.dart';
+import 'package:shopping_flutter/common_bloc/customer_profile_bloc/customer_profile_bloc.dart';
+import 'package:shopping_flutter/presentation/screens/product_detailes_screen/product_details.dart';
 
 void main() {
   runApp(
@@ -33,7 +33,9 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       home: const MainApp(),
       routes: {
-        '/Product_Detailes': (context) => const ProductDetailes(productId: 's',),
+        '/Product_Details': (context) => const ProductDetailes(
+              productId: 's',
+            ),
       },
       // routes: {
       //   '/Product_Detailes': (context) => MultiBlocProvider(
