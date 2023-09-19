@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:shopping_flutter/newArchitecture/data/models/product_model.dart';
 
 class ProductContainer extends StatefulWidget {
-  final ProductModel? product;
+  final ProductModel product;
 
-  const ProductContainer({Key? key, this.product}) : super(key: key);
+  const ProductContainer({Key? key, required this.product}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ProductContainerState();
@@ -34,7 +34,7 @@ class _ProductContainerState extends State<ProductContainer> {
                   AspectRatio(
                     aspectRatio: 1,
                     child: Image.network(
-                      'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+                      widget.product.banner.toString(),
                       width: deviceWidth / 2,
                       fit: BoxFit.fill,
                     ),
@@ -85,8 +85,8 @@ class _ProductContainerState extends State<ProductContainer> {
                             Container(
                                 margin:
                                     const EdgeInsets.only(left: 8, right: 8),
-                                child: const Text('34',
-                                    style: TextStyle(
+                                child: Text(widget.product.price.toString(),
+                                    style: const TextStyle(
                                         fontSize: 11,
                                         fontWeight: FontWeight.bold))),
                             Container(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/main_app.dart';
+import 'package:shopping_flutter/newArchitecture/presentation/screens/home/bloc/home_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/screens/sign_in_screen/bloc/sign_in_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/common_bloc/customer_profile_bloc/customer_profile_bloc.dart';
 import 'package:shopping_flutter/newArchitecture/presentation/screens/product_detailes_screen/product_details.dart';
@@ -11,6 +12,7 @@ void main() {
       providers: [
         BlocProvider(create: (context) => SignInBloc()),
         BlocProvider(create: (context) => CustomerProfileBloc()),
+        BlocProvider(create: (context) => HomeBloc()),
       ],
       child: const MyApp(),
     ),
