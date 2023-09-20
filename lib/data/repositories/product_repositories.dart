@@ -32,4 +32,31 @@ class ProductReposoitories {
       rethrow;
     }
   }
+
+  Future<List<ProductModel>> fetchSingleProductByIds(
+      List<dynamic>? list) async {
+    List productIds = list!.map((item) => item["productId"]).toList();
+
+    var data = {
+      'productIds': productIds,
+    };
+
+    try {
+      Response response = await api.sendRequest.get(
+        "product/get_products",
+        data: data,
+        options: Options(
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+      List<dynamic> productsMap = response.data["data"];
+      return productsMap
+          .map((productMap) => ProductModel.fromJson(productMap))
+          .toList();
+    } catch (ex) {
+      rethrow;
+    }
+  }
 }

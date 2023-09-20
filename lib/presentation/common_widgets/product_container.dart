@@ -115,10 +115,10 @@ class _ProductContainerState extends State<ProductContainer> {
                             ),
                           ],
                         ),
-                        const Text(
-                          "asda",
+                        Text(
+                          widget.product.name.toString(),
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 11, color: Colors.grey),
+                          style: const TextStyle(fontSize: 11, color: Colors.grey),
                         ),
                         Row(
                           children: [

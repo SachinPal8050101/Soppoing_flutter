@@ -17,3 +17,5 @@ class CustomerProfileErrorState extends CustomerProfileState {
 
   CustomerProfileErrorState(this.error);
 }
+
+class CustomerWishListSuccess extends CustomerProfileState {}
