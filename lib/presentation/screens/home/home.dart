@@ -19,8 +19,12 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   @override
+  void didChangeDependencies() {
+        context.read<HomeBloc>().add(HomeFetchProductevent());
+    super.didChangeDependencies();
+  }
+  @override
   Widget build(BuildContext context) {
-    context.read<HomeBloc>().add(HomeFetchProductevent());
     return BlocConsumer<SignInBloc, SignInState>(
       listener: (context, state) {
         if (state is SignInDone) {
@@ -49,6 +53,7 @@ class _HomeState extends State<Home> {
                       itemCount: state.products.length,
                       itemBuilder: (context, index) {
                         return ProductContainer(
+                          key: UniqueKey(),
                           product: state.products[index],
                         );
                       },

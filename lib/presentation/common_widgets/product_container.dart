@@ -103,7 +103,7 @@ class _ProductContainerState extends State<ProductContainer> {
                                           context
                                               .read<CustomerProfileBloc>()
                                               .add(CustomerAddToWishListEvent(
-                                                  widget.product.id));
+                                                  widget.product.id.toString()));
                                         } else {
                                           showModalBottomSheets(context);
                                         }
