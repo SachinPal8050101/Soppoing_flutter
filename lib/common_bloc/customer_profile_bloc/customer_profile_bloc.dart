@@ -30,7 +30,6 @@ class CustomerProfileBloc
         CustomerReposoitories customerReposoitories = CustomerReposoitories();
         try {
           await customerReposoitories.addToWishList(event.productId);
-          emit(CustomerWishListSuccess());
           add(CustomerFetchProfileEvent());
         } catch (ex) {
           emit(CustomerProfileErrorState('Something went wrong'));
